@@ -1,6 +1,9 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   console.log("This always run");
@@ -9,9 +12,15 @@ app.use((req, res, next) => {
 });
 
 app.use("/add-product", (req, res, next) => {
-  const { url } = req;
+  res.send(
+    "<form action='product' method='POST'><input name='namaProduk' /><button>Tambah produk</button></form>"
+  );
+});
 
-  res.send("<h1>Add Product Page</h1>");
+app.use("/product", (req, res, next) => {
+  console.log(req.body);
+
+  res.redirect("/");
 });
 
 app.use("/", (req, res, next) => {
