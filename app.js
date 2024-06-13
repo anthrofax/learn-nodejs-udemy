@@ -1,18 +1,18 @@
-const http = require('http');
-const express = require('express');
+const http = require("http");
+const express = require("express");
 
 const app = express();
 
 app.use((req, res, next) => {
-    console.log("In a middleware!")
+  console.log("In a middleware!");
 
-    next();
-})
+  next();
+});
 
 app.use((req, res, next) => {
+  console.log("In another middleware");
 
-})
+  res.send('<h1>Hello Express!</h1>');
+});
 
-const server = http.createServer(app);
-
-server.listen(3000);
+app.listen(3000);
