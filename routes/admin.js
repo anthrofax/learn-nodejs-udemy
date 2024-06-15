@@ -1,19 +1,25 @@
-const path = require('path')
+const path = require("path");
 
 const express = require("express");
 
-const rootDir = require('../helpers/rootPath')
+const rootDir = require("../helpers/rootPath");
 
 const router = express.Router();
 
-const product = []
+const product = [];
 
 router.get("/add-product", (req, res, next) => {
-  res.render('add-product', {title: 'App | Add Product', path: 'add-product'})
+  res.render("add-product", {
+    title: "App | Add Product",
+    path: "add-product",
+    activeAddProduct: true,
+    formCSS: true,
+    productCSS: true,
+  });
 });
 
 router.post("/add-product", (req, res, next) => {
-  product.push({title: req.body.title})
+  product.push({ title: req.body.title });
 
   res.redirect("/");
 });

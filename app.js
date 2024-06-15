@@ -15,9 +15,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.engine(
   "hbs",
   expressHandleBars.engine({
-    extname: ".hbs",
-    defaultLayout: "",
-    layoutsDir: "",
+    extname: "hbs",
+    defaultLayout: "main-layout",
+    layoutsDir: "views/layouts",
   })
 );
 app.set("view engine", "hbs");
