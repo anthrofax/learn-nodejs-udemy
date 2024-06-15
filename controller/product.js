@@ -16,11 +16,11 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  const product = Product.fetchAllProduct();
-  
-  res.render("shop", {
-    title: "App | Shop",
-    product,
-    path: "shop",
+  const product = Product.fetchAllProduct((product) => {
+    res.render("shop", {
+      title: "App | Shop",
+      product,
+      path: "shop",
+    });
   });
 };

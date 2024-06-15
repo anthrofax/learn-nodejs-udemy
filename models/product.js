@@ -24,11 +24,11 @@ module.exports = class Product {
     });
   }
 
-  static fetchAllProduct() {
+  static fetchAllProduct(callBack) {
     fs.readFile(dataFilePath, null, (err, fileContent) => {
-      if (err) return [];
+      if (err) callBack([]);
 
-      return JSON.parse(fileContent)
+      return callBack(JSON.parse(fileContent));
     });
   }
 };
