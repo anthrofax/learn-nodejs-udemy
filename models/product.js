@@ -58,9 +58,23 @@ module.exports = class Product {
       products[edittingProduct].description = edittedProductData.description;
       products[edittingProduct].price = edittedProductData.price;
 
-      fs.writeFile(p, JSON.stringify(products), (err) => console.log('Edit Product Error Log: '+err));
+      fs.writeFile(p, JSON.stringify(products), (err) =>
+        console.log("Edit Product Error Log: " + err)
+      );
 
       callBack();
+    });
+  }
+
+  static deleteProduct(productId, callBack) {
+    getProductsFromFile((products) => {
+      const filteredProducts = products.filter((item) => item.id !== productId);
+
+      fs.writeFile(p, JSON.stringify(filteredProducts), (err) => {
+        if (err) console.log("Delete Product Error Log: " + err);
+
+        callBack();
+      });
     });
   }
 };
