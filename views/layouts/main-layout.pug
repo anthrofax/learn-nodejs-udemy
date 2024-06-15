@@ -3,7 +3,7 @@ head
   meta(charset='UTF-8')
   meta(name='viewport' content='width=device-width, initial-scale=1.0')
   meta(http-equiv='X-UA-Compatible' content='ie=edge')
-  title Add Product
+  title #{title}
   link(rel='stylesheet' href='/css/main.css')
   block styles
 
@@ -12,8 +12,8 @@ body
         nav.main-header__nav
             ul.main-header__item-list
                 li.main-header__item
-                    a(href='/') Shop
+                    a(href='/', class=((path === 'shop' && 'active'))) Shop
                 li.main-header__item
-                    a.active(href='/admin/add-product') Add Product
+                    a(href='/admin/add-product', class=((path === 'add-product' && 'active'))) Add Product
 
     block content
