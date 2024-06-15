@@ -13,7 +13,9 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const { productId } = req.params;
 
-  console.log(productId);
+  Product.getProductById(productId, (product) => {
+    console.log(product);
+  });
 
   res.redirect("/");
 };
