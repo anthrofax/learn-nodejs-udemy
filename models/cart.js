@@ -40,14 +40,11 @@ module.exports = class Cart {
 
       const cart = JSON.parse(contentFile);
 
-      const productDeletingInCartIndex = cart.products.findIndex(
-        (item) => item.id === productId
-      );
-      const productDeletingInCart = cart.products[productDeletingInCartIndex];
+      const product = cart.products.find(item => item.id === productId);
 
       cart.products = cart.products.filter((item) => item.id !== productId);
       cart.totalPrice =
-        cart.totalPrice - Number(productPrice) * productDeletingInCart.qty;
+        cart.totalPrice - Number(productPrice) * product.qty;
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
         if (err) console.log(err);
