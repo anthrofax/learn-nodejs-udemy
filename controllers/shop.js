@@ -39,6 +39,14 @@ exports.getCart = (req, res, next) => {
   });
 };
 
+exports.postCart = (req, res, next) => {
+  const procutId = req.body.productId;
+
+  console.log(procutId);
+
+  res.redirect("/cart");
+};
+
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
     path: "/orders",
