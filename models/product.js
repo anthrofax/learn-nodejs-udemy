@@ -43,7 +43,24 @@ module.exports = class Product {
     getProductsFromFile((products) => {
       const selectedProduct = products.find((item) => item.id === id);
 
-      callBack(selectedProduct)
+      callBack(selectedProduct);
+    });
+  }
+
+  static editProduct(edittedProductData, callBack) {
+    getProductsFromFile((products) => {
+      const edittingProduct = products.findIndex(
+        (item) => item.id === edittedProductData.id
+      );
+
+      products[edittingProduct].title = edittedProductData.title;
+      products[edittingProduct].imageUrl = edittedProductData.imageUrl;
+      products[edittingProduct].description = edittedProductData.description;
+      products[edittingProduct].price = edittedProductData.price;
+
+      fs.writeFile(p, JSON.stringify(products), (err) => console.log('Edit Product Error Log: '+err));
+
+      callBack();
     });
   }
 };
