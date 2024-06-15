@@ -2,12 +2,12 @@
   <nav class="main-header__nav">
     <ul class="main-header__item-list">
       <li class="main-header__item">
-        <a class="<%=( path === 'shop') && 'active' %>" href="/">Shop</a>
+        <a class="<%=( path === 'shop') ? 'active' : '' %>" href="/">Shop</a>
       </li>
       <li class="main-header__item">
         <a
           href="/admin/add-product"
-          class="<%= (path === 'add-product') && 'active' %>"
+          class="<%= (path === 'add-product') ? 'active' : '' %>"
           >Add Product</a
         >
       </li>

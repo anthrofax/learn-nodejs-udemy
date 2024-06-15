@@ -3,7 +3,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const adminData = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
 const app = express();
@@ -20,11 +20,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/admin", adminData.router);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use((req, res) => {
-  res.render("404", { title: "Page Not Found" });
+  res.render("404", { title: "Page Not Found", path: '' });
 });
 
 app.listen(3000);
