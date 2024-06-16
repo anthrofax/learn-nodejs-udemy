@@ -10,9 +10,12 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   const newProduct = new Product(req.body.title);
 
-  newProduct.save();
-
-  res.redirect("/");
+  newProduct
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => console.log("Database Internal Error: " + err));
 };
 
 exports.getProducts = (req, res, next) => {

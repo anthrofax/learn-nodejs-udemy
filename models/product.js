@@ -4,17 +4,20 @@ const Cart = require("./cart");
 module.exports = class Product {
   constructor(title, imageUrl, description, price) {
     this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
     this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
   }
 
   save() {
     this.id = Math.random().toString();
 
-    return db.execute(
-      `INSERT INTO products VALUES('${this.id}', '${this.title}', '${this.price}', '${this.description}', '${this.imageUrl}')`
-    );
+    return db.execute(`INSERT INTO products VALUES (?, ?, ?, ?)`, [
+      this.title,
+      this.price,
+      this.description,
+      this.imageUrl,
+    ]);
   }
 
   static fetchAll() {
@@ -22,30 +25,34 @@ module.exports = class Product {
   }
 
   static getProductById(id) {
-    return db.execute(`SELECT * FROM products WHERE id='${id}'`);
+    return db.execute(`SELECT * FROM products WHERE id=?`, [id]);
   }
 
   static editProduct(edittedProductData) {
     const { title, imageUrl, price, description } = edittedProductData;
 
     return db
-      .execute(
-        `UPDATE products SET title = '${title}' WHERE id = '${edittedProductData.id}'`
-      )
+      .execute(`UPDATE products SET title = ? WHERE id = ?`, [
+        title,
+        edittedProductData.id,
+      ])
       .then(() => {
-        db.execute(
-          `UPDATE products SET imageUrl = '${imageUrl}' WHERE id = '${edittedProductData.id}'`
-        );
+        db.execute(`UPDATE products SET imageUrl = ? WHERE id = ?`, [
+          imageUrl,
+          edittedProductData.id,
+        ]);
       })
       .then(() => {
-        db.execute(
-          `UPDATE products SET price = '${price}' WHERE id = '${edittedProductData.id}'`
-        );
+        db.execute(`UPDATE products SET price = ? WHERE id = ?`, [
+          price,
+          edittedProductData.id,
+        ]);
       })
       .then(() => {
-        db.execute(
-          `UPDATE products SET description = '${description}' WHERE id = '${edittedProductData.id}'`
-        );
+        db.execute(`UPDATE products SET description = ? WHERE id = ?`, [
+          description,
+          edittedProductData.id,
+        ]);
       });
   }
 
