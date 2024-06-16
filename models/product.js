@@ -74,13 +74,12 @@ module.exports = class Product {
     getProductsFromFile((products) => {
       const filteredProducts = products.filter((item) => item.id !== productId);
 
-      const {price} = products.find((item) => item.id === productId);
-      Cart.deleteProductById(productId, price);
+      const { price } = products.find((item) => item.id === productId);
 
       fs.writeFile(p, JSON.stringify(filteredProducts), (err) => {
         if (err) console.log("Delete Product Error Log: " + err);
 
-        callBack();
+        Cart.deleteProductById(productId, price, callBack);
       });
     });
   }
