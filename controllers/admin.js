@@ -14,7 +14,8 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   const product = new Product(title, imageUrl, description, price);
-  product.save(() => {
+
+  product.save().then(() => {
     res.redirect("/");
   });
 };
@@ -25,23 +26,26 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.getProductById(prodId, (product) => {
-    if (!product) {
-      return res.redirect("/");
-    }
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editing: editMode,
-      product: product,
-    });
-  });
+  Product.getProductById(prodId)
+    .then(([[product]]) => {
+      if (!product) {
+        return res.render("404", { pageTitle: "Page Not Found", path: "" });
+      }
+
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: editMode,
+        product: product,
+      });
+    })
+    .catch((err) => console.log("Database Retrieval Error: " + err));
 };
 
 exports.postEditProduct = (req, res, next) => {
   const editedProduct = { ...req.body };
 
-  Product.editProduct(editedProduct, () => {
+  Product.editProduct(editedProduct).then(() => {
     res.redirect("/admin/products");
   });
 };
@@ -49,15 +53,19 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeleteProduct = (req, res, next) => {
   const { productId } = req.params;
 
-  Product.deleteProduct(productId, () => res.redirect("/admin/products"));
+  Product.deleteProduct(productId).then(() => {
+    res.redirect("/admin/products");
+  });
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("admin/products", {
-      prods: products,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
-    });
-  });
+  Product.fetchAll()
+    .then(([products]) => {
+      res.render("admin/products", {
+        prods: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => console.log(err));
 };

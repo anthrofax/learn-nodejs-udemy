@@ -7,9 +7,6 @@ const errorController = require("./controllers/error");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
-const db = require("./helpers/db");
-db.execute("SELECT * FROM products").then((result) => console.log(result[0]));
-
 const app = express();
 
 app.set("view engine", "ejs");
