@@ -36,7 +36,7 @@ module.exports = class Cart {
     });
   }
 
-  static deleteProductById(productId, productPrice) {
+  static deleteProductById(productId, productPrice, cb) {
     fs.readFile(p, (err, contentFile) => {
       if (err) return;
 
@@ -49,6 +49,8 @@ module.exports = class Cart {
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
         if (err) console.log(err);
+
+        cb();
       });
     });
   }
