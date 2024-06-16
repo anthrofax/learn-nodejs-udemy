@@ -8,7 +8,7 @@
     "start": "nodemon app.js",
     "start-server": "node app.js"
   },
-  "author": "Maximilian Schwarzmüller",
+  "author": "Afridho Ikhsan",
   "license": "ISC",
   "devDependencies": {
     "@types/body-parser": "^1.19.5",

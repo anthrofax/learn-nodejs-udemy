@@ -1,29 +1,27 @@
-const Product = require("../models/product");
+const { DataTypes } = require("sequelize");
 
-exports.getAddProduct = (req, res, next) => {
-  res.render("add-product", {
-    title: "App | Add Product",
-    path: "add-product",
-  });
-};
+const sequelize = require("../helpers/db");
 
-exports.postAddProduct = (req, res, next) => {
-  const newProduct = new Product(req.body.title);
+const Product = sequelize.define("product", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: DataTypes.STRING,
+  price: {
+    type: DataTypes.DOUBLE,
+    allowNull: null,
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: null,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: null,
+  },
+});
 
-  newProduct
-    .save()
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((err) => console.log("Database Internal Error: " + err));
-};
-
-exports.getProducts = (req, res, next) => {
-  const product = Product.fetchAllProduct((product) => {
-    res.render("shop", {
-      title: "App | Shop",
-      product,
-      path: "shop",
-    });
-  });
-};
+module.exports = Product;
