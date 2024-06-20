@@ -33,8 +33,8 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.getProductById(prodId)
-    .then(([[product]]) => {
+  Product.findByPk(prodId)
+    .then((product) => {
       if (!product) {
         return res.render("404", { pageTitle: "Page Not Found", path: "" });
       }
@@ -43,18 +43,26 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: "Edit Product",
         path: "/admin/edit-product",
         editing: editMode,
-        product: product,
+        product,
       });
     })
     .catch((err) => console.log("Database Retrieval Error: " + err));
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const editedProduct = { ...req.body };
+  const { id, title, price, imageUrl, description } = { ...req.body };
 
-  Product.editProduct(editedProduct).then(() => {
-    res.redirect("/admin/products");
-  });
+  Product.findByPk(id)
+    .then((product) => {
+      product.title = title;
+      product.price = price;
+      product.imageUrl = imageUrl;
+      product.description = description;
+      product.save();
+
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log("Database Edit Product Error: " + err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
