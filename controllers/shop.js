@@ -14,15 +14,29 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const { productId } = req.params;
 
-  Product.getProductById(productId)
-    .then(([[product]]) => {
+  // Product.findAll({
+  //   where: {
+  //     id: productId,
+  //   },
+  // })
+  //   .then((products) => {
+  //     res.render("shop/product-detail", {
+  //       product: products[0],
+  //       path: "/products",
+  //       pageTitle: `Detail Product | ${productId}`,
+  //     });
+  //   })
+  //   .catch((err) => console.log("Find by ID Internal Error: " + err));
+
+  Product.findByPk(productId)
+    .then((product) => {
       res.render("shop/product-detail", {
         product,
         path: "/products",
         pageTitle: `Detail Product | ${productId}`,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log("Find by ID Internal Error: " + err));
 };
 
 exports.getIndex = (req, res, next) => {
