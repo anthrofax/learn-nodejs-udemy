@@ -104,19 +104,19 @@ exports.postCart = (req, res, next) => {
     })
     .then(() => res.redirect("/cart"))
     .catch((err) => console.log(err));
-  // Product.getProductById(productId, (product) => {
-  //   Cart.addCart(productId, product.price, () => {
-  //     res.redirect("/cart");
-  //   });
-  // });
 };
 
 exports.deleteCart = (req, res, next) => {
-  Product.getProductById(req.body.productId, (product) => {
-    Cart.deleteProductById(product.id, product.price, () => {
-      res.redirect("/cart");
-    });
-  });
+  req.user
+    .getCart()
+    .then((cart) => cart.getProducts({ where: { id: req.body.productId } }))
+    .then((products) => {
+      const product = products[0];
+
+      return product.cart_item.destroy();
+    })
+    .then(() => res.redirect("/cart"))
+    .catch((err) => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
