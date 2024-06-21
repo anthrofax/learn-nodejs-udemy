@@ -50,27 +50,23 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.getCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProducts = [];
-
-      for (product of products) {
-        const cartProductData = cart.products.find(
-          (item) => item.id === product.id
+  req.user
+    .getCart()
+    .then((cart) => {
+      cart
+        .getProduct()
+        .then((products) => {
+          res.render("shop/cart", {
+            path: "/cart",
+            pageTitle: "Your Cart",
+            products: products,
+          });
+        })
+        .catch((err) =>
+          console.log("Getting product in user cart internal error" + err)
         );
-
-        if (cartProductData) {
-          cartProducts.push({ productData: product, qty: cartProductData.qty });
-        }
-      }
-
-      res.render("shop/cart", {
-        path: "/cart",
-        pageTitle: "Your Cart",
-        products: cartProducts,
-      });
-    });
-  });
+    })
+    .catch((err) => console.log("Getting cart internal error: " + err));
 };
 
 exports.postCart = (req, res, next) => {
