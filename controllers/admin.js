@@ -58,8 +58,9 @@ exports.postEditProduct = (req, res, next) => {
       product.price = price;
       product.imageUrl = imageUrl;
       product.description = description;
-      product.save();
-
+      return product.save();
+    })
+    .then(() => {
       res.redirect("/admin/products");
     })
     .catch((err) => console.log("Database Edit Product Error: " + err));
@@ -68,9 +69,14 @@ exports.postEditProduct = (req, res, next) => {
 exports.postDeleteProduct = (req, res, next) => {
   const { productId } = req.params;
 
-  Product.deleteProduct(productId).then(() => {
-    res.redirect("/admin/products");
-  });
+  Product.findByPk(productId)
+    .then((product) => {
+      return product.destroy();
+    })
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
