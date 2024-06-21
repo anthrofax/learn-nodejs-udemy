@@ -53,8 +53,8 @@ exports.getCart = (req, res, next) => {
   req.user
     .getCart()
     .then((cart) => {
-      cart
-        .getProduct()
+      return cart
+        .getProducts()
         .then((products) => {
           res.render("shop/cart", {
             path: "/cart",
@@ -71,12 +71,40 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const productId = req.body.productId;
+  let userCart;
 
-  Product.getProductById(productId, (product) => {
-    Cart.addCart(productId, product.price, () => {
-      res.redirect("/cart");
-    });
-  });
+  req.user
+    .getCart()
+    .then((cart) => {
+      userCart = cart;
+      return cart.getProducts();
+    })
+    .then((products) => {
+      let product;
+      let newQty = 1;
+      if (products.length > 0) {
+        product = products[0];
+      }
+
+      if (product) {
+        //
+      }
+
+      return Product.findByPk(productId).then((product) => {
+        userCart
+          .addProduct(product, { through: { qty: newQty } })
+          .then(() => {
+            res.redirect("/cart");
+          })
+          .catch((err) => console.log(err));
+      });
+    })
+    .catch((err) => console.log(err));
+  // Product.getProductById(productId, (product) => {
+  //   Cart.addCart(productId, product.price, () => {
+  //     res.redirect("/cart");
+  //   });
+  // });
 };
 
 exports.deleteCart = (req, res, next) => {
