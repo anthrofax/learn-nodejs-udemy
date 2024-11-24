@@ -1,1 +1,8 @@
-DUMMY
+	• Masuk sebagai root mysql
+	-> /Applications/XAMPP/xamppfiles/bin/mysql -u root
+	
+	• Kill semua proses sql database
+	-> sudo killall mysqld
+	
+	• Solusi apache web server mati 
+-> https://stackoverflow.com/questions/4582504/xampp-apache-webserver-localhost-not-working-on-mac-os
