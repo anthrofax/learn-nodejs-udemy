@@ -9,6 +9,7 @@ const connection = (callback) => {
   )
     .then((client) => {
       db = client.db();
+      callback();
     })
     .catch((err) => {
       console.log(`Error: ${err}`);
