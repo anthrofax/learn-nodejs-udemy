@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const db = require("../helpers/db").getDb;
 
 class Product {
   constructor(title, price, imageUrl, description) {
@@ -8,9 +8,7 @@ class Product {
     this.description = description;
   }
 
-  save() {
-
-  }
+  save() {}
 }
 
 // const Product = sequelize.define("product", {
