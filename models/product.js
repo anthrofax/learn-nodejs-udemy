@@ -19,6 +19,20 @@ class Product {
       return console.log(`Error: ${err}`);
     }
   }
+
+  static async fetchAll() {
+    const db = getDb();
+
+    try {
+      const products = await db.collection("products").find().toArray();
+
+      console.log(products);
+
+      return products;
+    } catch (err) {
+      return console.log(err);
+    }
+  }
 }
 
 // const Product = sequelize.define("product", {
