@@ -9,24 +9,24 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
-exports.postAddProduct = (req, res, next) => {
+exports.postAddProduct = async (req, res, next) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
 
-  req.user
-    .createProduct({
-      title,
-      imageUrl,
-      price,
-      description,
-    })
-    .then((result) => {
-      res.redirect("/admin/products");
-      console.log(result);
-    })
-    .catch((err) => console.log(err));
+  try {
+    const newCreatedProduct = new Product(title, price, imageUrl, description);
+    const result = await newCreatedProduct.save();
+
+    console.log("Success!")
+    console.log(result);
+
+    return res.redirect("/admin/products");
+  } catch (error) {
+    console.log("Error!")
+    return console.log(error);
+  }
 };
 
 // exports.getEditProduct = (req, res, next) => {

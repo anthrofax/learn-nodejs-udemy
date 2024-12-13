@@ -1,4 +1,4 @@
-const db = require("../helpers/db").getDb;
+const { getDb } = require("../helpers/db");
 
 class Product {
   constructor(title, price, imageUrl, description) {
@@ -8,7 +8,17 @@ class Product {
     this.description = description;
   }
 
-  save() {}
+  async save() {
+    const db = getDb();
+
+    try {
+      const result = await db.collection("products").insertOne(this);
+
+      return console.log(result);
+    } catch (error) {
+      return console.log(`Error: ${err}`);
+    }
+  }
 }
 
 // const Product = sequelize.define("product", {
