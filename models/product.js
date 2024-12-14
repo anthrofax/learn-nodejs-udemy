@@ -8,7 +8,7 @@ class Product {
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
-    this.id = id;
+    this.id = ObjectId.createFromHexString(id);
   }
 
   async save() {
@@ -21,10 +21,7 @@ class Product {
       } else {
         dbOp = await db
           .collection("products")
-          .updateOne(
-            { _id: ObjectId.createFromHexString(this.id) },
-            { $set: this }
-          );
+          .updateOne({ _id: this.id }, { $set: this });
       }
 
       return dbOp;

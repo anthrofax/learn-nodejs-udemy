@@ -1,5 +1,4 @@
 const Product = require("../models/product");
-const { ObjectId } = require("mongodb");
 
 exports.getAddProduct = (req, res) => {
   res.render("admin/edit-product", {
@@ -17,10 +16,7 @@ exports.postAddProduct = async (req, res) => {
 
   try {
     const newCreatedProduct = new Product(title, price, imageUrl, description);
-    const result = await newCreatedProduct.save();
-
-    console.log("Success!");
-    console.log(result);
+    await newCreatedProduct.save();
 
     return res.redirect("/admin/products");
   } catch (error) {
@@ -60,7 +56,7 @@ exports.postEditProduct = async (req, res) => {
 
   try {
     await product.save({
-      id: ObjectId.createFromHexString(id),
+      id,
       title,
       price,
       imageUrl,
