@@ -1,3 +1,5 @@
+const { ObjectId } = require("mongodb");
+
 const { getDb } = require("../helpers/db");
 
 class Product {
@@ -33,28 +35,21 @@ class Product {
       return console.log(err);
     }
   }
-}
 
-// const Product = sequelize.define("product", {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     autoIncrement: true,
-//     allowNull: false,
-//     primaryKey: true,
-//   },
-//   title: DataTypes.STRING,
-//   price: {
-//     type: DataTypes.DOUBLE,
-//     allowNull: false,
-//   },
-//   imageUrl: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//   },
-//   description: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//   },
-// });
+  static async fetchProductById(productId) {
+    const db = getDb();
+
+    try {
+      const product = await db
+        .collection("products")
+        .find({ _id: ObjectId.createFromHexString(productId) })
+        .next();
+
+      return product;
+    } catch (error) {
+      return console.log(error);
+    }
+  }
+}
 
 module.exports = Product;

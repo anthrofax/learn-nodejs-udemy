@@ -10,32 +10,20 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
-exports.getProduct = (req, res, next) => {
+exports.getProduct = async (req, res, next) => {
   const { productId } = req.params;
 
-  // Product.findAll({
-  //   where: {
-  //     id: productId,
-  //   },
-  // })
-  //   .then((products) => {
-  //     res.render("shop/product-detail", {
-  //       product: products[0],
-  //       path: "/products",
-  //       pageTitle: `Detail Product | ${productId}`,
-  //     });
-  //   })
-  //   .catch((err) => console.log("Find by ID Internal Error: " + err));
-
-  Product.findByPk(productId)
-    .then((product) => {
-      res.render("shop/product-detail", {
-        product,
-        path: "/products",
-        pageTitle: `Detail Product | ${productId}`,
-      });
-    })
-    .catch((err) => console.log("Find by ID Internal Error: " + err));
+  try {
+    const product = await Product.fetchProductById(productId);
+    console.log(product);
+    res.render("shop/product-detail", {
+      product,
+      path: "/products",
+      pageTitle: `Detail Product | ${productId}`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.getIndex = (req, res, next) => {
