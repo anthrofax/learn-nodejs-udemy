@@ -8,12 +8,13 @@ class Product {
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
-    this.id = ObjectId.createFromHexString(id);
+    this.id = id && ObjectId.createFromHexString(id);
   }
 
   async save() {
     const db = getDb();
     let dbOp;
+    console.log(this.id);
 
     try {
       if (!this.id) {
