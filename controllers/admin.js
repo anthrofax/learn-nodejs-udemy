@@ -69,18 +69,17 @@ exports.postEditProduct = async (req, res) => {
   }
 };
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   const { productId } = req.params;
+exports.postDeleteProduct = async (req, res) => {
+  const { productId } = req.params;
 
-//   Product.findByPk(productId)
-//     .then((product) => {
-//       return product.destroy();
-//     })
-//     .then(() => {
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log(err));
-// };
+  try {
+    await Product.deleteProductById(productId);
+
+    return res.redirect("/admin/products");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 exports.getProducts = async (req, res) => {
   try {

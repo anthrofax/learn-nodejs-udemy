@@ -7,7 +7,6 @@ const mongoConnect = require("./helpers/db").connection;
 const errorController = require("./controllers/error");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const rootPath = require("./helpers/rootPath");
 
 const app = express();
 

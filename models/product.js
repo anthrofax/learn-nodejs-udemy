@@ -58,6 +58,20 @@ class Product {
       return console.log(error);
     }
   }
+
+  static async deleteProductById(prodId) {
+    const db = getDb();
+
+    try {
+      await db
+        .collection("products")
+        .deleteOne({ _id: ObjectId.createFromHexString(prodId) });
+
+      console.log("Delete Product Success!");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = Product;
