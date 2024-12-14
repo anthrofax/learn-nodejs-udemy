@@ -22,7 +22,7 @@ app.use(async (req, res, next) => {
 
   if (user) {
     req.user = user;
-    if (user) next();
+    next();
   }
 });
 
