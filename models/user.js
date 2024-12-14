@@ -3,9 +3,11 @@ const { ObjectId } = require("mongodb");
 const { getDb } = require("../helpers/db");
 
 class User {
-  constructor({ username, password }) {
+  constructor({ userId, username, password, cart }) {
+    this._id = userId;
     this.username = username;
     this.password = password;
+    this.cart = cart;
   }
 
   async save() {
@@ -15,6 +17,20 @@ class User {
       await db.collection("users").insertOne(this);
 
       console.log("User berhasil terdaftar");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async addToCart(product) {
+    const db = getDb();
+
+    try {
+      const updatedCart = { items: [{ ...product, quantity: 1 }] };
+
+      await db
+        .collection("users")
+        .updateOne({ _id: this._id }, { $set: { cart: updatedCart } });
     } catch (error) {
       console.log(error);
     }
