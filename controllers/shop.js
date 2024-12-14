@@ -1,6 +1,6 @@
 const Product = require("../models/product");
 
-exports.getProducts = (req, res, next) => {
+exports.getProducts = (req, res) => {
   Product.fetchAll().then((products) => {
     res.render("shop/product-list", {
       prods: products,
@@ -10,7 +10,7 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
-exports.getProduct = async (req, res, next) => {
+exports.getProduct = async (req, res) => {
   const { productId } = req.params;
 
   try {
@@ -26,7 +26,7 @@ exports.getProduct = async (req, res, next) => {
   }
 };
 
-exports.getIndex = (req, res, next) => {
+exports.getIndex = (req, res) => {
   Product.fetchAll().then((products) => {
     res.render("shop/index", {
       prods: products,
@@ -36,7 +36,7 @@ exports.getIndex = (req, res, next) => {
   });
 };
 
-exports.getCart = (req, res, next) => {
+exports.getCart = (req, res) => {
   req.user
     .getCart()
     .then((cart) => {
@@ -56,44 +56,56 @@ exports.getCart = (req, res, next) => {
     .catch((err) => console.log("Getting cart internal error: " + err));
 };
 
-exports.postCart = (req, res, next) => {
+exports.postCart = async (req, res) => {
   const productId = req.body.productId;
-  let userCart;
-  let newQty = 1;
 
-  req.user
-    .getCart()
-    .then((cart) => {
-      userCart = cart;
-      return cart.getProducts({
-        where: {
-          id: productId,
-        },
-      });
-    })
-    .then((products) => {
-      let product;
+  try {
+    const product = await Product.fetchProductById(productId);
 
-      if (products.length > 0) {
-        product = products[0];
-      }
+    console.log(req.user);
+    await req.user.addToCart(product);
 
-      if (product) {
-        newQty = product.cart_item.qty + 1;
+    return res.redirect("/cart");
+  } catch (error) {
+    console.log(error);
+  }
 
-        return product;
-      }
+  // let userCart;
+  // let newQty = 1;
 
-      return Product.findByPk(productId);
-    })
-    .then((product) => {
-      return userCart.addProduct(product, { through: { qty: newQty } });
-    })
-    .then(() => res.redirect("/cart"))
-    .catch((err) => console.log(err));
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     userCart = cart;
+  //     return cart.getProducts({
+  //       where: {
+  //         id: productId,
+  //       },
+  //     });
+  //   })
+  //   .then((products) => {
+  //     let product;
+
+  //     if (products.length > 0) {
+  //       product = products[0];
+  //     }
+
+  //     if (product) {
+  //       newQty = product.cart_item.qty + 1;
+
+  //       return product;
+  //     }
+
+  //     return Product.findByPk(productId);
+  //   })
+  //   .then((product) => {
+  //     return userCart.addProduct(product, { through: { qty: newQty } });
+  //   })
+  //   .then(() => res.redirect("/cart"))
+  //   .catch((err) => console.log(err));
 };
 
-exports.deleteCart = (req, res, next) => {
+exports.deleteCart = (req, res) => {
   req.user
     .getCart()
     .then((cart) => cart.getProducts({ where: { id: req.body.productId } }))
@@ -106,7 +118,7 @@ exports.deleteCart = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postOrder = (req, res, next) => {
+exports.postOrder = (req, res) => {
   let userCart;
 
   req.user
@@ -136,7 +148,7 @@ exports.postOrder = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getOrders = (req, res, next) => {
+exports.getOrders = (req, res) => {
   req.user
     .getOrders({ include: ["products"] })
     .then((orders) => {
@@ -149,7 +161,7 @@ exports.getOrders = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.getCheckout = (req, res, next) => {
+exports.getCheckout = (req, res) => {
   res.render("shop/checkout", {
     path: "/checkout",
     pageTitle: "Checkout",

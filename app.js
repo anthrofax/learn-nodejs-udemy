@@ -18,10 +18,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(async (req, res, next) => {
-  const user = await User.fetchUserById("675d099b3f5c8a92509214be");
+  const user = await User.fetchUserById("675d3d933f5c8a92509214c2");
 
   if (user) {
-    req.user = user;
+    req.user = new User({
+      userId: user._id,
+      username: user.username,
+      password: user.password,
+    });
     next();
   }
 });
