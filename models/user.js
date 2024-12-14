@@ -31,7 +31,6 @@ class User {
       );
 
       let updatedCart = [...this.cart.items];
-      console.log(cartProductIndex);
 
       if (cartProductIndex >= 0) {
         updatedCart[cartProductIndex].quantity =
@@ -90,15 +89,34 @@ class User {
     }
   }
 
-  async deleteItemFromCart({ userId, productId }) {
+  async addOrder() {
     const db = getDb();
 
-    console.log(userId);
-    console.log(productId);
+    try {
+      await db.collection("orders").insertOne(this.cart);
+
+      this.cart.items = [];
+      await db.collection("users").updateOne(
+        { _id: this._id },
+        {
+          $set: {
+            cart: {
+              items: [],
+            },
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteItemFromCart(productId) {
+    const db = getDb();
 
     try {
       await db.collection("users").updateOne(
-        { _id: userId },
+        { _id: this._id },
         {
           $set: {
             cart: {
