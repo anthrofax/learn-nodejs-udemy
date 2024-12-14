@@ -1,9 +1,8 @@
 const path = require("path");
-
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
-const mongoConnect = require("./helpers/db").connection;
 const errorController = require("./controllers/error");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -25,7 +24,7 @@ app.use(async (req, res, next) => {
       userId: user._id,
       username: user.username,
       password: user.password,
-      cart: user.cart
+      cart: user.cart,
     });
     next();
   }
@@ -36,19 +35,15 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(async () => {
-  try {
-    // const initUser = await User.fetchUserById("675d099b3f5c8a92509214be");
-
-    // if (!initUser) {
-    //   const user = new User("anthrofax", "123123");
-
-    //   await user.save();
-    // }
-
+mongoose
+  .connect(
+    "mongodb+srv://anthrofax:Qz5JnvHh3ljaKMX4@nodejs-udemy-ecomerce.gmbku.mongodb.net"
+  )
+  .then(() => {
     app.listen(3000);
-    console.log("Server is started on PORT:3000");
-  } catch (error) {
-    console.log(error);
-  }
-});
+  })
+  .catch((err) =>
+    console.log(
+      `Error connecting to the mongodb database with mongoose; Error: ${err}`
+    )
+  );
