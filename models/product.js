@@ -3,22 +3,33 @@ const { ObjectId } = require("mongodb");
 const { getDb } = require("../helpers/db");
 
 class Product {
-  constructor(title, price, imageUrl, description) {
+  constructor({ title, price, imageUrl, description, id }) {
     this.title = title;
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
+    this.id = id;
   }
 
   async save() {
     const db = getDb();
+    let dbOp;
 
     try {
-      const result = await db.collection("products").insertOne(this);
+      if (!this.id) {
+        dbOp = await db.collection("products").insertOne(this);
+      } else {
+        dbOp = await db
+          .collection("products")
+          .updateOne(
+            { _id: ObjectId.createFromHexString(this.id) },
+            { $set: this }
+          );
+      }
 
-      return console.log(result);
+      return dbOp;
     } catch (error) {
-      return console.log(`Error: ${err}`);
+      return console.log(`Error: ${error}`);
     }
   }
 

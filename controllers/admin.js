@@ -1,7 +1,7 @@
 const Product = require("../models/product");
-const User = require("../models/user");
+const { ObjectId } = require("mongodb");
 
-exports.getAddProduct = (req, res, next) => {
+exports.getAddProduct = (req, res) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
@@ -9,7 +9,7 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
-exports.postAddProduct = async (req, res, next) => {
+exports.postAddProduct = async (req, res) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
@@ -19,57 +19,59 @@ exports.postAddProduct = async (req, res, next) => {
     const newCreatedProduct = new Product(title, price, imageUrl, description);
     const result = await newCreatedProduct.save();
 
-    console.log("Success!")
+    console.log("Success!");
     console.log(result);
 
     return res.redirect("/admin/products");
   } catch (error) {
-    console.log("Error!")
+    console.log("Error!");
     return console.log(error);
   }
 };
 
-// exports.getEditProduct = (req, res, next) => {
-//   const editMode = req.query.edit;
-//   if (!editMode) {
-//     return res.redirect("/");
-//   }
-//   const prodId = req.params.productId;
+exports.getEditProduct = async (req, res) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect("/");
+  }
+  const prodId = req.params.productId;
 
-//   req.user
-//     .getProducts({ where: { id: prodId } })
-//     .then((products) => {
-//       const product = products[0];
-//       if (!product) {
-//         return res.render("404", { pageTitle: "Page Not Found", path: "" });
-//       }
+  try {
+    const product = await Product.fetchProductById(prodId);
 
-//       res.render("admin/edit-product", {
-//         pageTitle: "Edit Product",
-//         path: "/admin/edit-product",
-//         editing: editMode,
-//         product,
-//       });
-//     })
-//     .catch((err) => console.log("Database Retrieval Error: " + err));
-// };
+    if (!product) {
+      return res.render("404", { pageTitle: "Page Not Found", path: "" });
+    }
 
-// exports.postEditProduct = (req, res, next) => {
-//   const { id, title, price, imageUrl, description } = { ...req.body };
+    return res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing: editMode,
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-//   Product.findByPk(id)
-//     .then((product) => {
-//       product.title = title;
-//       product.price = price;
-//       product.imageUrl = imageUrl;
-//       product.description = description;
-//       return product.save();
-//     })
-//     .then(() => {
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log("Database Edit Product Error: " + err));
-// };
+exports.postEditProduct = async (req, res) => {
+  const { id, title, price, imageUrl, description } = req.body;
+  const product = new Product({ id, title, price, imageUrl, description });
+
+  try {
+    await product.save({
+      id: ObjectId.createFromHexString(id),
+      title,
+      price,
+      imageUrl,
+      description,
+    });
+
+    return res.redirect("/admin/products");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // exports.postDeleteProduct = (req, res, next) => {
 //   const { productId } = req.params;
@@ -84,12 +86,16 @@ exports.postAddProduct = async (req, res, next) => {
 //     .catch((err) => console.log(err));
 // };
 
-// exports.getProducts = (req, res, next) => {
-//   req.user.getProducts().then((products) => {
-//     res.render("admin/products", {
-//       prods: products,
-//       pageTitle: "Admin Products",
-//       path: "/admin/products",
-//     });
-//   });
-// };
+exports.getProducts = async (req, res) => {
+  try {
+    const products = await Product.fetchAll();
+
+    return res.render("admin/products", {
+      prods: products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

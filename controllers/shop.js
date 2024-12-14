@@ -15,7 +15,7 @@ exports.getProduct = async (req, res, next) => {
 
   try {
     const product = await Product.fetchProductById(productId);
-    console.log(product);
+
     res.render("shop/product-detail", {
       product,
       path: "/products",
