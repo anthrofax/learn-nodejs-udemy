@@ -90,6 +90,8 @@ exports.getProducts = async (req, res) => {
   try {
     const products = await Product.fetchAll();
 
+    console.log(req.user)
+
     return res.render("admin/products", {
       prods: products,
       pageTitle: "Admin Products",

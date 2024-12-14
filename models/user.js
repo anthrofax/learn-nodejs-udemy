@@ -1,22 +1,37 @@
-// const { DataTypes } = require("sequelize");
+const { ObjectId } = require("mongodb");
 
-// const sequelize = require("../helpers/db");
+const { getDb } = require("../helpers/db");
 
-// const User = sequelize.define("user", {
-//   id: {
-//     type: DataTypes.INTEGER,
-//     autoIncrement: true,
-//     allowNull: false,
-//     primaryKey: true,
-//   },
-//   name: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//   },
-//   email: {
-//     type: DataTypes.STRING,
-//     allowNull: false,
-//   },
-// });
+class User {
+  constructor({ username, password }) {
+    this.username = username;
+    this.password = password;
+  }
 
-// module.exports = User;
+  async save() {
+    const db = getDb();
+
+    try {
+      await db.collection("users").insertOne(this);
+
+      console.log("User berhasil terdaftar");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async fetchUserById(userId) {
+    const db = getDb();
+    try {
+      const user = await db
+        .collection("users")
+        .findOne({ _id: ObjectId.createFromHexString(userId) });
+
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+module.exports = User;
