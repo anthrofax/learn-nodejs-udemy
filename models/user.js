@@ -75,8 +75,6 @@ class User {
         .find({ _id: { $in: userCartItemIds } })
         .toArray();
 
-      console.log(this.cart.items);
-
       const products = rawProductDataInCart.map((rawItem) => {
         return {
           ...rawItem,
@@ -86,9 +84,33 @@ class User {
         };
       });
 
-      console.log(products)
-
       return products;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteItemFromCart({ userId, productId }) {
+    const db = getDb();
+
+    console.log(userId);
+    console.log(productId);
+
+    try {
+      await db.collection("users").updateOne(
+        { _id: userId },
+        {
+          $set: {
+            cart: {
+              items: this.cart.items.filter(
+                (cartItem) => cartItem._id.toString() !== productId
+              ),
+            },
+          },
+        }
+      );
+
+      console.log("The item successfully deleted!");
     } catch (error) {
       console.log(error);
     }
