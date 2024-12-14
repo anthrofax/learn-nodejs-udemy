@@ -119,6 +119,21 @@ class User {
     }
   }
 
+  async getOrders() {
+    const db = getDb();
+
+    try {
+      const orders = await db
+        .collection("orders")
+        .find({ "user._id": this._id })
+        .toArray();
+
+      return orders;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async deleteItemFromCart(productId) {
     const db = getDb();
 

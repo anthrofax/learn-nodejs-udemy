@@ -87,17 +87,20 @@ exports.postOrder = async (req, res) => {
   }
 };
 
-exports.getOrders = (req, res) => {
-  req.user
-    .getOrders({ include: ["products"] })
-    .then((orders) => {
-      res.render("shop/orders", {
-        path: "/orders",
-        pageTitle: "Your Orders",
-        orders,
-      });
-    })
-    .catch((err) => console.log(err));
+exports.getOrders = async (req, res) => {
+  try {
+    const orders = await req.user.getOrders();
+
+    console.log(orders)
+
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "Your Orders",
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.getCheckout = (req, res) => {
