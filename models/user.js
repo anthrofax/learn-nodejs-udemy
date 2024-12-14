@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 
 const { getDb } = require("../helpers/db");
+const Product = require("./product");
 
 class User {
   constructor({ userId, username, password, cart }) {
@@ -24,14 +25,28 @@ class User {
 
   async addToCart(product) {
     const db = getDb();
-    console.log(product)
 
     try {
-      const updatedCart = { items: [{ _id: product._id, quantity: 1 }] };
+      const cartProductIndex = this.cart?.items.findIndex(
+        (cp) => cp._id.toString() === product._id.toString()
+      );
+
+      let updatedCart = [...this.cart.items];
+      console.log(cartProductIndex);
+
+      if (cartProductIndex >= 0) {
+        updatedCart[cartProductIndex].quantity =
+          this.cart.items[cartProductIndex].quantity + 1;
+      } else {
+        updatedCart.push({ _id: product._id, quantity: 1 });
+      }
 
       await db
         .collection("users")
-        .updateOne({ _id: this._id }, { $set: { cart: updatedCart } });
+        .updateOne(
+          { _id: this._id },
+          { $set: { cart: { items: updatedCart } } }
+        );
     } catch (error) {
       console.log(error);
     }

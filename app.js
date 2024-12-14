@@ -25,6 +25,7 @@ app.use(async (req, res, next) => {
       userId: user._id,
       username: user.username,
       password: user.password,
+      cart: user.cart
     });
     next();
   }

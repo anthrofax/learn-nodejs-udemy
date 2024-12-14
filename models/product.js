@@ -4,11 +4,11 @@ const { getDb } = require("../helpers/db");
 
 class Product {
   constructor({ title, price, imageUrl, description, id, userId }) {
+    this._id = id && ObjectId.createFromHexString(id);
     this.title = title;
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
-    this._id = id && ObjectId.createFromHexString(id);
     this.userId = userId;
   }
 
