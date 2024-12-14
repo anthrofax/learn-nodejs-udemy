@@ -13,7 +13,6 @@ exports.postAddProduct = async (req, res) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  console.log(req.user._id);
 
   try {
     const newCreatedProduct = new Product({

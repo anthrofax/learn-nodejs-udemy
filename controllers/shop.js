@@ -36,24 +36,21 @@ exports.getIndex = (req, res) => {
   });
 };
 
-exports.getCart = (req, res) => {
-  req.user
-    .getCart()
-    .then((cart) => {
-      return cart
-        .getProducts()
-        .then((products) => {
-          res.render("shop/cart", {
-            path: "/cart",
-            pageTitle: "Your Cart",
-            products: products,
-          });
-        })
-        .catch((err) =>
-          console.log("Getting product in user cart internal error" + err)
-        );
-    })
-    .catch((err) => console.log("Getting cart internal error: " + err));
+exports.getCart = async (req, res) => {
+  try {
+    const products = await req.user.getCart();
+
+    console.log("Lol");
+    console.log(products);
+
+    res.render("shop/cart", {
+      path: "/cart",
+      pageTitle: "Your Cart",
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.postCart = async (req, res) => {
@@ -69,40 +66,6 @@ exports.postCart = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-
-  // let userCart;
-  // let newQty = 1;
-
-  // req.user
-  //   .getCart()
-  //   .then((cart) => {
-  //     userCart = cart;
-  //     return cart.getProducts({
-  //       where: {
-  //         id: productId,
-  //       },
-  //     });
-  //   })
-  //   .then((products) => {
-  //     let product;
-
-  //     if (products.length > 0) {
-  //       product = products[0];
-  //     }
-
-  //     if (product) {
-  //       newQty = product.cart_item.qty + 1;
-
-  //       return product;
-  //     }
-
-  //     return Product.findByPk(productId);
-  //   })
-  //   .then((product) => {
-  //     return userCart.addProduct(product, { through: { qty: newQty } });
-  //   })
-  //   .then(() => res.redirect("/cart"))
-  //   .catch((err) => console.log(err));
 };
 
 exports.deleteCart = (req, res) => {

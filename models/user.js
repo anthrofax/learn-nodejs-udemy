@@ -1,7 +1,6 @@
 const { ObjectId } = require("mongodb");
 
 const { getDb } = require("../helpers/db");
-const Product = require("./product");
 
 class User {
   constructor({ userId, username, password, cart }) {
@@ -60,6 +59,36 @@ class User {
         .findOne({ _id: ObjectId.createFromHexString(userId) });
 
       return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getCart() {
+    const db = getDb();
+
+    try {
+      const userCartItemIds = this.cart.items.map((item) => item._id);
+
+      const rawProductDataInCart = await db
+        .collection("products")
+        .find({ _id: { $in: userCartItemIds } })
+        .toArray();
+
+      console.log(this.cart.items);
+
+      const products = rawProductDataInCart.map((rawItem) => {
+        return {
+          ...rawItem,
+          quantity: this.cart.items.find(
+            (i) => i._id.toString() === rawItem._id.toString()
+          ).quantity,
+        };
+      });
+
+      console.log(products)
+
+      return products;
     } catch (error) {
       console.log(error);
     }
