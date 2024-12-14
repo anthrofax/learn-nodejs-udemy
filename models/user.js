@@ -93,7 +93,15 @@ class User {
     const db = getDb();
 
     try {
-      await db.collection("orders").insertOne(this.cart);
+      const products = await this.getCart();
+
+      await db.collection("orders").insertOne({
+        items: products,
+        user: {
+          _id: this._id,
+          name: this.username,
+        },
+      });
 
       this.cart.items = [];
       await db.collection("users").updateOne(
