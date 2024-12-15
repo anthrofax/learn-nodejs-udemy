@@ -83,12 +83,10 @@ exports.postOrder = async (req, res) => {
   try {
     const user = await req.user.populate("cart.items.productId");
 
-    console.log(user);
-
     const products = user.cart.items.map((itemInCart) => {
       return {
         quantity: itemInCart.quantity,
-        product: itemInCart.productId,
+        product: { ...itemInCart.productId._doc },
       };
     });
 
@@ -99,6 +97,8 @@ exports.postOrder = async (req, res) => {
       },
       products,
     });
+
+    req.user.cart.items = [];
 
     await newOrder.save();
 
