@@ -54,9 +54,8 @@ exports.postCart = async (req, res) => {
   const productId = req.body.productId;
 
   try {
-    const product = await Product.fetchProductById(productId);
+    const product = await Product.findById(productId);
 
-    console.log(req.user);
     await req.user.addToCart(product);
 
     return res.redirect("/cart");
