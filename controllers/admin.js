@@ -30,12 +30,15 @@ exports.postAddProduct = async (req, res) => {
   const price = req.body.price;
   const description = req.body.description;
 
+  console.log(req.user);
+
   try {
     const newCreatedProduct = new Product({
       title,
       price,
       imageUrl,
       description,
+      userId: req.user,
     });
     await newCreatedProduct.save();
 
@@ -100,4 +103,3 @@ exports.postDeleteProduct = async (req, res) => {
     console.log(error);
   }
 };
-
