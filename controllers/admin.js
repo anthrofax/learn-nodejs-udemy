@@ -88,7 +88,7 @@ exports.postDeleteProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.fetchAll();
+    const products = await Product.find();
 
     console.log(req.user);
 

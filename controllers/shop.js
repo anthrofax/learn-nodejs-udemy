@@ -1,12 +1,12 @@
 const Product = require("../models/product");
 
-exports.getProducts = (req, res) => {
-  Product.fetchAll().then((products) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "All Products",
-      path: "/products",
-    });
+exports.getProducts = async (req, res) => {
+  const products = await Product.find();
+
+  res.render("shop/product-list", {
+    prods: products,
+    pageTitle: "All Products",
+    path: "/products",
   });
 };
 
@@ -26,13 +26,13 @@ exports.getProduct = async (req, res) => {
   }
 };
 
-exports.getIndex = (req, res) => {
-  Product.fetchAll().then((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
+exports.getIndex = async (req, res) => {
+  const products = await Product.find();
+
+  res.render("shop/index", {
+    prods: products,
+    pageTitle: "Shop",
+    path: "/",
   });
 };
 
@@ -91,7 +91,7 @@ exports.getOrders = async (req, res) => {
   try {
     const orders = await req.user.getOrders();
 
-    console.log(orders)
+    console.log(orders);
 
     res.render("shop/orders", {
       path: "/orders",
