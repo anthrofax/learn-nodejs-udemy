@@ -38,7 +38,7 @@ exports.getEditProduct = async (req, res) => {
   const prodId = req.params.productId;
 
   try {
-    const product = await Product.fetchProductById(prodId);
+    const product = await Product.findById(prodId);
 
     if (!product) {
       return res.render("404", { pageTitle: "Page Not Found", path: "" });
@@ -57,16 +57,15 @@ exports.getEditProduct = async (req, res) => {
 
 exports.postEditProduct = async (req, res) => {
   const { id, title, price, imageUrl, description } = req.body;
-  const product = new Product({ id, title, price, imageUrl, description });
 
   try {
-    await product.save({
-      id,
-      title,
-      price,
-      imageUrl,
-      description,
-    });
+    const product = await Product.findById(id);
+
+    product.title = title;
+    product.price = price;
+    product.imageUrl = imageUrl;
+    product.description = description;
+    await product.save();
 
     return res.redirect("/admin/products");
   } catch (error) {
