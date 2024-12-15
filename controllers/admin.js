@@ -20,7 +20,6 @@ exports.postAddProduct = async (req, res) => {
       price,
       imageUrl,
       description,
-      userId: req.user._id,
     });
     await newCreatedProduct.save();
 
