@@ -3,6 +3,8 @@ const Product = require("../models/product");
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find();
+    // .select("title price -_id")
+    // .populate("userId", "name");
 
     console.log(req.user);
 
