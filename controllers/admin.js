@@ -1,5 +1,21 @@
 const Product = require("../models/product");
 
+exports.getProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    console.log(req.user);
+
+    return res.render("admin/products", {
+      prods: products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 exports.getAddProduct = (req, res) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
@@ -77,7 +93,7 @@ exports.postDeleteProduct = async (req, res) => {
   const { productId } = req.params;
 
   try {
-    await Product.deleteProductById(productId);
+    await Product.findByIdAndDelete(productId);
 
     return res.redirect("/admin/products");
   } catch (error) {
@@ -85,18 +101,3 @@ exports.postDeleteProduct = async (req, res) => {
   }
 };
 
-exports.getProducts = async (req, res) => {
-  try {
-    const products = await Product.find();
-
-    console.log(req.user);
-
-    return res.render("admin/products", {
-      prods: products,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
