@@ -70,7 +70,7 @@ exports.deleteCart = async (req, res) => {
   const productId = req.body.productId;
 
   try {
-    await req.user.deleteItemFromCart({ userId: req.user._id, productId });
+    await req.user.deleteItemFromCart(productId);
 
     res.redirect("/cart");
   } catch (error) {

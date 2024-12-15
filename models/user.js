@@ -54,4 +54,20 @@ userSchema.methods.addToCart = async function (product) {
   }
 };
 
+userSchema.methods.deleteItemFromCart = async function (productId) {
+  try {
+    const updatedCart = this.cart.items.filter(
+      (cartItem) => cartItem.productId.toString() !== productId
+    );
+
+    this.cart.items = updatedCart;
+
+    await this.save();
+
+    console.log("The item successfully deleted!");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = mongoose.model("users", userSchema);
