@@ -14,7 +14,7 @@ exports.getProduct = async (req, res) => {
   const { productId } = req.params;
 
   try {
-    const product = await Product.fetchProductById(productId);
+    const product = await Product.findById(productId);
 
     res.render("shop/product-detail", {
       product,
