@@ -1,3 +1,4 @@
+const Order = require("../models/order");
 const Product = require("../models/product");
 
 exports.getProducts = async (req, res) => {
@@ -80,7 +81,26 @@ exports.deleteCart = async (req, res) => {
 
 exports.postOrder = async (req, res) => {
   try {
-    await req.user.addOrder();
+    const user = await req.user.populate("cart.items.productId");
+
+    console.log(user);
+
+    const products = user.cart.items.map((itemInCart) => {
+      return {
+        quantity: itemInCart.quantity,
+        product: itemInCart.productId,
+      };
+    });
+
+    const newOrder = new Order({
+      user: {
+        name: user.name,
+        userId: user,
+      },
+      products,
+    });
+
+    await newOrder.save();
 
     return res.redirect("/orders");
   } catch (error) {
