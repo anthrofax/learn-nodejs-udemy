@@ -70,4 +70,10 @@ userSchema.methods.deleteItemFromCart = async function (productId) {
   }
 };
 
+userSchema.methods.clearCart = async function () {
+  this.cart.items = [];
+
+  await this.save();
+};
+
 module.exports = mongoose.model("users", userSchema);

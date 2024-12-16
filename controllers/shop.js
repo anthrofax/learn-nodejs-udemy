@@ -98,9 +98,8 @@ exports.postOrder = async (req, res) => {
       products,
     });
 
-    req.user.cart.items = [];
-
     await newOrder.save();
+    await req.user.clearCart();
 
     return res.redirect("/orders");
   } catch (error) {
