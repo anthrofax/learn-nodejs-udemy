@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Order = require("./order");
 
 const { Schema } = mongoose;
 
@@ -74,6 +75,12 @@ userSchema.methods.clearCart = async function () {
   this.cart.items = [];
 
   await this.save();
+};
+
+userSchema.methods.getOrders = async function () {
+  const orders = await Order.find({ "user.userId": this._id }).exec();
+
+  return orders;
 };
 
 module.exports = mongoose.model("users", userSchema);

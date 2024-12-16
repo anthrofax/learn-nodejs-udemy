@@ -111,8 +111,6 @@ exports.getOrders = async (req, res) => {
   try {
     const orders = await req.user.getOrders();
 
-    console.log(orders);
-
     res.render("shop/orders", {
       path: "/orders",
       pageTitle: "Your Orders",
