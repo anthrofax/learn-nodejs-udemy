@@ -12,6 +12,7 @@ exports.getProducts = async (req, res) => {
       prods: products,
       pageTitle: "Admin Products",
       path: "/admin/products",
+      isAuthenticated: req.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -23,6 +24,7 @@ exports.getAddProduct = (req, res) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    isAuthenticated: req.isLoggedIn,
   });
 };
 
@@ -62,7 +64,11 @@ exports.getEditProduct = async (req, res) => {
     const product = await Product.findById(prodId);
 
     if (!product) {
-      return res.render("404", { pageTitle: "Page Not Found", path: "" });
+      return res.render("404", {
+        pageTitle: "Page Not Found",
+        path: "",
+        isAuthenticated: req.isLoggedIn,
+      });
     }
 
     return res.render("admin/edit-product", {
@@ -70,6 +76,7 @@ exports.getEditProduct = async (req, res) => {
       path: "/admin/edit-product",
       editing: editMode,
       product,
+      isAuthenticated: req.isLoggedIn,
     });
   } catch (error) {
     console.log(error);

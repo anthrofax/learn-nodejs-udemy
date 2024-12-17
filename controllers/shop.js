@@ -8,6 +8,8 @@ exports.getProducts = async (req, res) => {
     prods: products,
     pageTitle: "All Products",
     path: "/products",
+    isAuthenticated: req.isLoggedIn
+
   });
 };
 
@@ -21,6 +23,8 @@ exports.getProduct = async (req, res) => {
       product,
       path: "/products",
       pageTitle: `Detail Product | ${productId}`,
+      isAuthenticated: req.isLoggedIn
+
     });
   } catch (error) {
     console.log(error);
@@ -34,6 +38,8 @@ exports.getIndex = async (req, res) => {
     prods: products,
     pageTitle: "Shop",
     path: "/",
+    isAuthenticated: req.isLoggedIn
+
   });
 };
 
@@ -47,6 +53,8 @@ exports.getCart = async (req, res) => {
       path: "/cart",
       pageTitle: "Your Cart",
       products,
+      isAuthenticated: req.isLoggedIn
+
     });
   } catch (error) {
     console.log(error);
@@ -115,6 +123,8 @@ exports.getOrders = async (req, res) => {
       path: "/orders",
       pageTitle: "Your Orders",
       orders,
+      isAuthenticated: req.isLoggedIn
+
     });
   } catch (error) {
     console.log(error);
@@ -125,5 +135,6 @@ exports.getCheckout = (req, res) => {
   res.render("shop/checkout", {
     path: "/checkout",
     pageTitle: "Checkout",
+    isAuthenticated: req.isLoggedIn
   });
 };
