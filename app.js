@@ -31,24 +31,25 @@ app.use(
   })
 );
 
-// app.use(async (req, res, next) => {
-//   try {
-//     const user = await User.findById("675e99eca58ecc3d9f170745");
+app.use(async (req, res, next) => {
+  try {
+    console.log(req.session.user);
+    const user = await User.findById(req.session.user._id);
 
-//     if (user) {
-//       req.user = user;
-//       next();
-//     }
-//   } catch (error) {
-//     console.log(`Error on logging in with existing user: ${error}`);
-//   }
-// });
+    if (user) {
+      req.user = user;
+      next();
+    }
+  } catch (error) {
+    console.log(`Error on logging in with existing user: ${error}`);
+    next();
+  }
+});
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
-app.use(errorController.get404);
 
 mongoose
   .connect(MONGODB_URL)

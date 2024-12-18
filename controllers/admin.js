@@ -3,8 +3,8 @@ const Product = require("../models/product");
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find()
-      .select("title price -_id")
-      .populate("userId", "name");
+      // .select("title price -_id")
+      // .populate("userId", "name");
 
     return res.render("admin/products", {
       prods: products,
@@ -38,7 +38,7 @@ exports.postAddProduct = async (req, res) => {
       price,
       imageUrl,
       description,
-      userId: req.session.user,
+      userId: req.user,
     });
     await newCreatedProduct.save();
 
@@ -50,6 +50,7 @@ exports.postAddProduct = async (req, res) => {
 };
 
 exports.getEditProduct = async (req, res) => {
+  console.log('Holaa')
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect("/");

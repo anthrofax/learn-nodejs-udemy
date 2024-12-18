@@ -42,7 +42,7 @@ exports.getIndex = async (req, res) => {
 
 exports.getCart = async (req, res) => {
   try {
-    const user = await req.session.user.populate("cart.items.productId");
+    const user = await req.user.populate("cart.items.productId");
 
     const products = user.cart.items;
 
@@ -50,7 +50,7 @@ exports.getCart = async (req, res) => {
       path: "/cart",
       pageTitle: "Your Cart",
       products,
-      isAuthenticated: req.sesion.isLoggedIn,
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -63,7 +63,7 @@ exports.postCart = async (req, res) => {
   try {
     const product = await Product.findById(productId);
 
-    await req.session.user.addToCart(product);
+    await req.user.addToCart(product);
 
     return res.redirect("/cart");
   } catch (error) {
@@ -75,7 +75,7 @@ exports.deleteCart = async (req, res) => {
   const productId = req.body.productId;
 
   try {
-    await req.session.user.deleteItemFromCart(productId);
+    await req.user.deleteItemFromCart(productId);
 
     res.redirect("/cart");
   } catch (error) {
@@ -85,7 +85,7 @@ exports.deleteCart = async (req, res) => {
 
 exports.postOrder = async (req, res) => {
   try {
-    const user = await req.session.user.populate("cart.items.productId");
+    const user = await req.user.populate("cart.items.productId");
 
     const products = user.cart.items.map((itemInCart) => {
       return {
@@ -103,7 +103,7 @@ exports.postOrder = async (req, res) => {
     });
 
     await newOrder.save();
-    await req.session.user.clearCart();
+    await req.user.clearCart();
 
     return res.redirect("/orders");
   } catch (error) {
@@ -113,7 +113,7 @@ exports.postOrder = async (req, res) => {
 
 exports.getOrdersPage = async (req, res) => {
   try {
-    const user = req.session.user;
+    const user = req.user;
     console.log(user);
     const orders = await user.getOrders();
 
