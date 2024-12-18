@@ -21,8 +21,10 @@ exports.postLogin = async (req, res) => {
     if (user) {
       req.session.user = user;
       req.session.isLoggedIn = true;
-      
-      return res.redirect("/");
+
+      req.session.save(() => {
+        res.redirect("/");
+      });
     }
   } catch (error) {
     console.log(`Error on logging in with existing user: ${error}`);
