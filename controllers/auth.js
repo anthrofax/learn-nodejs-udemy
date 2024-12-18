@@ -1,40 +1,39 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
-exports.getLogin = (req, res) => {
-  const isLoggedIn =
-    req.get("Cookie")?.split(";")[0].trim().split("=")[1] === "true";
-
-  console.log(req.session.isLoggedIn);
-  console.log(req.session.user);
-  console.log(req.get("Cookie"));
-  res.render("auth/login", {
-    path: "/login",
-    pageTitle: "Login",
-    isAuthenticated: isLoggedIn,
+exports.getLogin = (req, res, next) => {
+  res.render('auth/login', {
+    path: '/login',
+    pageTitle: 'Login',
+    isAuthenticated: false
   });
 };
 
-exports.postLogin = async (req, res) => {
-  try {
-    const user = await User.findById("675e99eca58ecc3d9f170745");
-
-    if (user) {
-      req.session.user = user;
-      req.session.isLoggedIn = true;
-
-      req.session.save(() => {
-        res.redirect("/");
-      });
-    }
-  } catch (error) {
-    console.log(`Error on logging in with existing user: ${error}`);
-  }
+exports.getSignup = (req, res, next) => {
+  res.render('auth/signup', {
+    path: '/signup',
+    pageTitle: 'Signup',
+    isAuthenticated: false
+  });
 };
 
-exports.postLogout = (req, res) => {
-  req.session.destroy((err) => {
-    console.log(err);
+exports.postLogin = (req, res, next) => {
+  User.findById('5bab316ce0a7c75f783cb8a8')
+    .then(user => {
+      req.session.isLoggedIn = true;
+      req.session.user = user;
+      req.session.save(err => {
+        console.log(err);
+        res.redirect('/');
+      });
+    })
+    .catch(err => console.log(err));
+};
 
-    res.redirect("/");
+exports.postSignup = (req, res, next) => {};
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
   });
 };
