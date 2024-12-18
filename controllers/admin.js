@@ -6,13 +6,11 @@ exports.getProducts = async (req, res) => {
       .select("title price -_id")
       .populate("userId", "name");
 
-    console.log(req.user);
-
     return res.render("admin/products", {
       prods: products,
       pageTitle: "Admin Products",
       path: "/admin/products",
-      isAuthenticated: req.isLoggedIn,
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -24,7 +22,7 @@ exports.getAddProduct = (req, res) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -34,15 +32,13 @@ exports.postAddProduct = async (req, res) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  console.log(req.user);
-
   try {
     const newCreatedProduct = new Product({
       title,
       price,
       imageUrl,
       description,
-      userId: req.user,
+      userId: req.session.user,
     });
     await newCreatedProduct.save();
 
@@ -67,7 +63,7 @@ exports.getEditProduct = async (req, res) => {
       return res.render("404", {
         pageTitle: "Page Not Found",
         path: "",
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
       });
     }
 
@@ -76,7 +72,7 @@ exports.getEditProduct = async (req, res) => {
       path: "/admin/edit-product",
       editing: editMode,
       product,
-      isAuthenticated: req.isLoggedIn,
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
