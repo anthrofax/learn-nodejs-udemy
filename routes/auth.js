@@ -1,5 +1,5 @@
 const express = require("express");
-const { check } = require("express-validator");
+const { check, body } = require("express-validator");
 
 const authController = require("../controllers/auth");
 
@@ -13,16 +13,24 @@ router.post("/login", authController.postLogin);
 
 router.post(
   "/signup",
-  check("email")
-    .isEmail()
-    .withMessage("Email yang anda inputkan tidak valid.")
-    .custom((value, { req }) => {
-      if (value === "afridhoikhsan@gmail.com") {
-        throw new Error("Email tersebut sudah diblacklist!");
-      }
+  [
+    check("email")
+      .isEmail()
+      .withMessage("Email yang anda inputkan tidak valid.")
+      .custom((value, { req }) => {
+        if (value === "afridhoikhsan@gmail.com") {
+          throw new Error("Email tersebut sudah diblacklist!");
+        }
 
-      return true;
-    }),
+        return true;
+      }),
+    body(
+      "password",
+      "Kata sandi yang anda inputkan tidak valid. Kata sandi hanya boleh diisi dengan huruf dan angka dan minimal 5 karakter"
+    )
+      .isAlphanumeric()
+      .isLength({ min: 5 }),
+  ],
   authController.postSignup
 );
 
