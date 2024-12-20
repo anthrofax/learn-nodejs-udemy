@@ -25,13 +25,15 @@ router.post(
         } catch (err) {
           console.log(err);
         }
-      }),
+      })
+      .normalizeEmail(),
     body(
       "password",
       "Kata sandi yang anda inputkan tidak valid. Kata sandi hanya boleh diisi dengan huruf dan angka dan minimal 5 karakter"
     )
       .isLength({ min: 5 })
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .trim(),
   ],
   authController.postLogin
 );
@@ -44,13 +46,16 @@ router.post(
       "Kata sandi yang anda inputkan tidak valid. Kata sandi hanya boleh diisi dengan huruf dan angka dan minimal 5 karakter"
     )
       .isAlphanumeric()
-      .isLength({ min: 5 }),
-    body("confirmPassword").custom((value, { req }) => {
-      if (value !== req.body.password)
-        throw new Error("Kata sandi tidak cocok!");
+      .isLength({ min: 5 })
+      .trim(),
+    body("confirmPassword")
+      .custom((value, { req }) => {
+        if (value !== req.body.password)
+          throw new Error("Kata sandi tidak cocok!");
 
-      return true;
-    }),
+        return true;
+      })
+      .trim(),
     check("email")
       .isEmail()
       .withMessage("Email yang anda inputkan tidak valid.")
@@ -66,7 +71,8 @@ router.post(
             return Promise.reject("Email sudah terdaftar!");
           }
         });
-      }),
+      })
+      .normalizeEmail(),
   ],
   authController.postSignup
 );
