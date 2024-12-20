@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
       api_key:
-        "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",
+        "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",
     },
   })
 );
@@ -173,4 +173,34 @@ exports.postReset = (req, res, next) => {
       console.log(error);
     }
   });
+};
+
+exports.getNewPassword = async (req, res, next) => {
+  const { token } = req.params;
+
+  try {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: {
+        $gt: Date.now(),
+      },
+    });
+
+    let message = req.flash("error");
+
+    if (message.length > 0) {
+      message = message[0];
+    } else {
+      message = null;
+    }
+
+    res.render("auth/new-password", {
+      path: "/new-password",
+      pageTitle: "New Password",
+      errorMessage: message,
+      userId: user._id.toString(),
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
