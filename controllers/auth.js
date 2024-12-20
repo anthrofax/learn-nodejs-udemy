@@ -26,6 +26,7 @@ exports.getLogin = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
+    oldInput: { email: "", password: "" },
   });
 };
 
@@ -40,6 +41,7 @@ exports.getSignup = (req, res, next) => {
     path: "/signup",
     pageTitle: "Signup",
     errorMessage: message,
+    oldInput: { email: "", password: "" },
   });
 };
 
@@ -54,6 +56,7 @@ exports.postLogin = (req, res, next) => {
       path: "/login",
       pageTitle: "Login",
       errorMessage: errorsObj.array()[0].msg,
+      oldInput: { email, password },
     });
   }
 
@@ -97,6 +100,7 @@ exports.postSignup = (req, res, next) => {
       path: "/signup",
       pageTitle: "Signup",
       errorMessage: errorsObj.array()[0].msg,
+      oldInput: { email, password, confirmPassword: req.body.confirmPassword },
     });
   }
 
