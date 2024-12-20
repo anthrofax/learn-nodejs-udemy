@@ -10,7 +10,31 @@ router.get("/login", authController.getLogin);
 
 router.get("/signup", authController.getSignup);
 
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    body("email", "Email/kata sandi tidak valid")
+      .notEmpty()
+      .withMessage("Email harus diisi!")
+      .isEmail()
+      .custom(async (value, { req }) => {
+        try {
+          const user = await User.findOne({ email: value });
+
+          if (!user) return Promise.reject("Email tidak terdaftar");
+        } catch (err) {
+          console.log(err);
+        }
+      }),
+    body(
+      "password",
+      "Kata sandi yang anda inputkan tidak valid. Kata sandi hanya boleh diisi dengan huruf dan angka dan minimal 5 karakter"
+    )
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+  ],
+  authController.postLogin
+);
 
 router.post(
   "/signup",
