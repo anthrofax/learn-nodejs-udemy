@@ -30,6 +30,12 @@ router.post(
     )
       .isAlphanumeric()
       .isLength({ min: 5 }),
+    body("confirmPassword").custom((value, { req }) => {
+      if (value !== req.body.password)
+        throw new Error("Kata sandi tidak cocok!");
+
+      return true;
+    }),
   ],
   authController.postSignup
 );
