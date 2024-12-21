@@ -168,6 +168,9 @@ exports.getInvoice = (req, res, next) => {
       return next(err); // Menangani error dengan middleware error handling
     }
 
+    res.setHeader('Content-Type', 'application/pdf');
+    // res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${invoiceName}"`);
     res.send(data); // Mengirimkan file invoice sebagai response
   });
 };
