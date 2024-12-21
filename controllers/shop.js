@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 const Product = require("../models/product");
 const Order = require("../models/order");
 
@@ -153,4 +156,18 @@ exports.getOrders = (req, res, next) => {
 
       return next(error);
     });
+};
+
+exports.getInvoice = (req, res, next) => {
+  const orderId = req.params.orderId; // Mendapatkan ID pesanan dari URL
+  const invoiceName = `invoice-${orderId}.pdf`
+  const invoicePath = path.join("data", "invoices", invoiceName);
+
+  fs.readFile(invoicePath, (err, data) => {
+    if (err) {
+      return next(err); // Menangani error dengan middleware error handling
+    }
+
+    res.send(data); // Mengirimkan file invoice sebagai response
+  });
 };
