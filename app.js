@@ -73,7 +73,7 @@ app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
   // res.status(error.httpStatusCode).render(...)
-  res.redirect("/505");
+  res.redirect("/500");
 });
 
 mongoose
