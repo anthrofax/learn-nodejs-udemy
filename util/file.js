@@ -1,7 +1,11 @@
-const fs = require("fs");
+const fs = require('fs');
 
-exports.deleteFile = (filePath) => {
-  fs.unlink(filePath, (err) => {
-    if (err) throw err;
-  });
-};
+const deleteFile = (filePath) => {
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            throw (err);
+        }
+    });
+}
+
+exports.deleteFile = deleteFile;
