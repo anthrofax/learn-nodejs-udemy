@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "Complete Node.js Guide",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon app.js",
     "start-server": "node app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^5.1.2",
+    "mocha": "^11.0.1",
     "nodemon": "^1.18.3"
   },
   "dependencies": {
